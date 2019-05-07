@@ -149,7 +149,7 @@ void main() {
 
 对比Phong shading和Gouraud shading可以发现，Gouraud shading几乎不显示镜面光照的高光部分，这是因为Gouraud shading只在顶点应用了光照模型，而高光主要出现在图形内部，所以插值得到的结果中没有高光。而Phong shading在每一个点都应用了光照模型，所以可以显示完整的镜面光照效果。
 
-为了更好地观察光照效果，加入视角移动的功能，可以移动摄像机到不同角度来观察光照效果。在ImGui菜单栏View中，选中Move进行移动，通过键盘按键【w】【s】【a】【d】或方向键来进行前后左右移动，通过鼠标来控制视角移动，选中Freeze停止移动，也可以用键盘按键【5】【6】来切换状态。在ImGui菜单栏Shading中，选中Phong为Phong shading，选中Gouraud为Gouraud shading，在进行视角移动时可以用键盘按键【1】【2】进行切换。Shader类见`Shader.h`和`Shader.cpp`，实现Phong shading和Gouraud shading的shader见`P1.cpp`，实现光照模型的完整代码见`P2.cpp`，观察光照效果的视频见`P1.mp4`。
+为了更好地观察光照效果，加入视角移动的功能，可以移动摄像机到不同角度来观察光照效果。在ImGui菜单栏View中，选中Move进行移动，通过键盘按键【w】【s】【a】【d】或方向键来进行前后左右移动，通过鼠标来控制视角移动，使用滚轮可以缩放视角，选中Freeze停止移动，也可以用键盘按键【5】【6】来切换状态。在ImGui菜单栏Shading中，选中Phong为Phong shading，选中Gouraud为Gouraud shading，在进行视角移动时可以用键盘按键【1】【2】进行切换。Shader类见`Shader.h`和`Shader.cpp`，实现Phong shading和Gouraud shading的shader见`P1.cpp`，实现光照模型的完整代码见`P2.cpp`，观察光照效果的视频见`P1.mp4`。
 
 
 
