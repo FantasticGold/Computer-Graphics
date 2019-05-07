@@ -1,0 +1,101 @@
+#include "HW6.h"
+
+
+Shader PhongShading() {
+  const char* vertexShaderSource =
+    "#version 330 core\n"
+    "layout(location = 0) in vec3 aPos;\n"
+    "layout(location = 1) in vec2 aTexCoord;\n"
+    "layout(location = 2) in vec3 aColor;\n"
+    "layout(location = 3) in vec3 aNormal;\n"
+    "out vec2 TexCoord;\n"
+    "out vec3 objectColor;\n"
+    "out vec3 Normal;\n"
+    "out vec3 FragPos;\n"
+    "uniform mat4 model;\n"
+    "uniform mat4 view;\n"
+    "uniform mat4 projection;\n"
+    "void main() {\n"
+    "  gl_Position = projection * view * model * vec4(aPos, 1.0);\n"
+    "  TexCoord = aTexCoord;\n"
+    "  objectColor = aColor;\n"
+    "  Normal = mat3(transpose(inverse(model))) * aNormal;\n"
+    "  FragPos = vec3(model * vec4(aPos, 1.0));\n"
+    "}\0";
+  const char* fragmentShaderSource =
+    "#version 330 core\n"
+    "out vec4 FragColor;\n"
+    "in vec2 TexCoord;\n"
+    "in vec3 objectColor;\n"
+    "in vec3 Normal;\n"
+    "in vec3 FragPos;\n"
+    "uniform sampler2D texture;\n"
+    "uniform vec3 lightColor;\n"
+    "uniform vec3 lightPos;\n"
+    "uniform float ambientStrength;\n"
+    "uniform float diffuseStrength;\n"
+    "uniform vec3 viewPos;\n"
+    "uniform int shininess;\n"
+    "uniform float specularStrength;\n"
+    "void main() {\n"
+    "  vec3 ambient = ambientStrength * lightColor;\n"
+    "  vec3 norm = normalize(Normal);\n"
+    "  vec3 lightDir = normalize(lightPos - FragPos);\n"
+    "  float diff = max(dot(norm, lightDir), 0.0);\n"
+    "  vec3 diffuse = diffuseStrength * diff * lightColor;\n"
+    "  vec3 viewDir = normalize(viewPos - FragPos);\n"
+    "  vec3 reflectDir = reflect(-lightDir, norm);\n"
+    "  float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);\n"
+    "  vec3 specular = specularStrength * spec * lightColor;\n"
+    "  FragColor = texture(texture, TexCoord) * vec4((ambient + diffuse + specular) * objectColor, 1.0f);\n"
+    "}\0";
+  
+  return Shader(vertexShaderSource, fragmentShaderSource);
+}
+
+Shader GouraudShading() {
+  const char* vertexShaderSource =
+    "#version 330 core\n"
+    "layout(location = 0) in vec3 aPos;\n"
+    "layout(location = 1) in vec2 aTexCoord;\n"
+    "layout(location = 2) in vec3 aColor;\n"
+    "layout(location = 3) in vec3 aNormal;\n"
+    "out vec2 TexCoord;\n"
+    "out vec3 objectColor;\n"
+    "uniform mat4 model;\n"
+    "uniform mat4 view;\n"
+    "uniform mat4 projection;\n"
+    "uniform vec3 lightColor;\n"
+    "uniform vec3 lightPos;\n"
+    "uniform float ambientStrength;\n"
+    "uniform float diffuseStrength;\n"
+    "uniform vec3 viewPos;\n"
+    "uniform int shininess;\n"
+    "uniform float specularStrength;\n"
+    "void main() {\n"
+    "  gl_Position = projection * view * model * vec4(aPos, 1.0);\n"
+    "  TexCoord = aTexCoord;\n"
+    "  vec3 ambient = ambientStrength * lightColor;\n"
+    "  vec3 norm = normalize(aNormal);\n"
+    "  vec3 FragPos = vec3(model * vec4(aPos, 1.0));\n"
+    "  vec3 lightDir = normalize(lightPos - FragPos);\n"
+    "  float diff = max(dot(norm, lightDir), 0.0);\n"
+    "  vec3 diffuse = diffuseStrength * diff * lightColor;\n"
+    "  vec3 viewDir = normalize(viewPos - FragPos);\n"
+    "  vec3 reflectDir = reflect(-lightDir, norm);\n"
+    "  float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);\n"
+    "  vec3 specular = specularStrength * spec * lightColor;\n"
+    "  objectColor = (ambient + diffuse + specular) * aColor;\n"
+    "}\0";
+  const char* fragmentShaderSource =
+    "#version 330 core\n"
+    "out vec4 FragColor;\n"
+    "in vec2 TexCoord;\n"
+    "in vec3 objectColor;\n"
+    "uniform sampler2D texture;\n"
+    "void main() {\n"
+    "  FragColor = texture(texture, TexCoord) * vec4(objectColor, 1.0f);\n"
+    "}\0";
+
+  return Shader(vertexShaderSource, fragmentShaderSource);
+}
