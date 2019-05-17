@@ -6,7 +6,6 @@ const int WINDOW_HEIGHT = 1000;
 
 // camera
 Camera camera;
-glm::mat4 currentView = camera.getView();
 
 float deltaTime = 0.0f;
 float lastTime = (float)glfwGetTime();
@@ -54,7 +53,7 @@ void processInput(GLFWwindow* window) {
 
   // move
   direction = glm::vec3(0.0f, 0.0f, 0.0f);
-  if (viewRB == 1) {
+  if (viewRB == VIEWRB_FREEZE) {
     return;
   }
 
@@ -278,6 +277,7 @@ int main() {
   glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(float), (void*)(8 * sizeof(float)));
   glEnableVertexAttribArray(3);
 
+  glm::mat4 currentView = camera.getView();
   while (!glfwWindowShouldClose(window)) {
     processInput(window);
 
